@@ -1,62 +1,41 @@
+
+stage('Docker Diagnose') {
+  steps {
+    sh '''
+      set +e
+      docker version
+      docker info
+      docker compose version
+      docker-compose version
+      which docker
+      ls -al /usr/libexec/docker/cli-plugins 2>/dev/null || true
+      ls -al /usr/local/lib/docker/cli-plugins 2>/dev/null || true
+    '''
+  }
+}
+
+
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = "project"
-        DOCKER_BUILDKIT = "0"   // 🔥 buildx 비활성화 (안정성)
-    }
-
     stages {
 
-        stage('Create Root Env File') {
+        stage('Build Backend Image') {
             steps {
-                sh '''
-                cat <<EOF > .env
-POSTGRES_USER=kogo
-POSTGRES_PASSWORD=math1106
-POSTGRES_DB=mydb
-
-DBNAME=mydb
-DBUSER=kogo
-DBPASSWORD=math1106
-DBHOST=db
-DBPORT=5432
-
-DJANGO_SECRET_KEY=django-secret
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,43.201.67.51,15.164.94.195
-CORS_ALLOWED_ORIGINS=http://localhost,http://127.0.0.1,http://43.201.67.51,http://15.164.94.195
-
-NEXT_PUBLIC_API_BASE_URL=/api
-EOF
-                '''
+                sh 'docker build -t backend:latest ./backend'
             }
         }
 
-        stage('Build & Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                set -e
-                echo "🚀 Deploy start"
-
-                docker compose down || true
-                docker compose build --no-cache
-                docker compose up -d
-
-                docker compose ps
-
-                echo "✅ Deploy finished"
-                '''
+                sh 'kubectl apply -f k8s/'
             }
         }
-    }
 
-    post {
-        success {
-            echo "🎉 Deployment Success"
-        }
-        failure {
-            echo "❌ Deployment Failed"
+        stage('Check Pods') {
+            steps {
+                sh 'kubectl get pods -n my-app'
+            }
         }
     }
 }
