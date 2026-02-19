@@ -1,20 +1,3 @@
-
-stage('Docker Diagnose') {
-  steps {
-    sh '''
-      set +e
-      docker version
-      docker info
-      docker compose version
-      docker-compose version
-      which docker
-      ls -al /usr/libexec/docker/cli-plugins 2>/dev/null || true
-      ls -al /usr/local/lib/docker/cli-plugins 2>/dev/null || true
-    '''
-  }
-}
-
-
 pipeline {
     agent any
 
