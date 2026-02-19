@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Build Image') {
+        stage('Build Backend Image') {
             steps {
                 sh 'docker build -t backend:latest ./backend'
             }
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Check Pods') {
             steps {
-                sh 'kubectl get pods'
+                sh 'kubectl get pods -n my-app'
             }
         }
     }

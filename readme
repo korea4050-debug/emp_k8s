@@ -30,6 +30,8 @@ git commit -m "emp_jenkins up2"
 
 
 jenkinsfile 에 있던 내용
+
+
 pipeline {
     agent any
 
