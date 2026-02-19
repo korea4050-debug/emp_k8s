@@ -1,0 +1,27 @@
+docker ps
+
+docker build -t my-jenkins .
+
+docker run -d \
+  --name jenkins \
+  -u root \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  my-jenkins
+
+docker exec -it jenkins bash
+
+apt update
+
+apt install -y docker.io
+
+curl -LO "https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl"
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+
+
+git add .
+git commit -m "emp_jenkins up2"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: my-app
+spec:
+  selector:
+    app: db
+  ports:
+    - name: postgres
+      protocol: TCP
+      port: 5432        # Cluster 내부에서 접근할 포트
+      targetPort: 5432  # 컨테이너 내부 포트
+  type: ClusterIP        # 내부 통신 전용 DB이므로 ClusterIP가 가장 적절

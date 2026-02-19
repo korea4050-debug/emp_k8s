@@ -1,0 +1,25 @@
+라이브러리받기
+python -m pip install -r requirements.txt
+
+설정파일만들기
+django-admin startproject config .
+
+앱만들기
+python manage.py startapp emp
+
+실행하기
+python manage.py runserver
+
+데이터베이스에넣기
+python manage.py makemigrations
+python manage.py migrate
+
+api보기endpoint보기
+python manage.py show_urls
+
+관리자 생성하기
+python manage.py createsuperuser
+
+
+관리자 페이지
+http://127.0.0.1:8000/admin/
