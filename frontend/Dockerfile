@@ -2,10 +2,10 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # 루트 컨텍스트에서 frontend/package.json 가져오기
-COPY frontend/package.json frontend/package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
-COPY frontend/ ./
+COPY . .
 
 # 빌드 시 NEXT_PUBLIC_API_BASE_URL 전달
 ARG NEXT_PUBLIC_API_BASE_URL
