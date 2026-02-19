@@ -25,3 +25,32 @@ docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 git add .
 git commit -m "emp_jenkins up2"
+
+
+
+
+jenkinsfile 에 있던 내용
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Build Backend Image') {
+            steps {
+                sh 'docker build -t backend:latest ./backend'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+
+        stage('Check Pods') {
+            steps {
+                sh 'kubectl get pods -n my-app'
+            }
+        }
+    }
+}
